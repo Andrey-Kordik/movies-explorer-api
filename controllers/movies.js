@@ -5,33 +5,42 @@ const ForbiddenError = require('../errors/ForbiddenError');
 const ValidationError = require('../errors/ValidationError');
 
 const getMovies = (req, res, next) => {
-  Movie.find({})
-    .then((cards) => res.status(200).send(cards))
+  const userId = req.user._id;
+  Movie.find({ user: userId })
+    .then((movies) => res.status(200).send(movies))
     .catch(next);
 };
 
 const createMovie = (req, res, next) => {
   const {
     country, director, duration, year, description, image,
-    trailer, nameRU, nameEN, thumbnail, movieId
+    trailer, nameRU, nameEN, thumbnail, movieId,
   } = req.body;
 
   Movie.create({
-    country, director, duration, year, description,
-    image, trailer, nameRU, nameEN, thumbnail, movieId,
-    owner: req.user._id
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailer,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId,
+    owner: req.user._id,
   })
-  .then(movie => {
-    res.status(201).send(movie);
-  })
-  .catch((err) => {
-    if (err.name === 'ValidationError') {
-      throw new ValidationError('Переданы некорректные данные при создании фильма.');
-    }
-    return next(err);
-  });
+    .then((movie) => {
+      res.status(201).send(movie);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        throw new ValidationError('Переданы некорректные данные при создании фильма.');
+      }
+      return next(err);
+    });
 };
-
 
 const deleteMovie = (req, res, next) => {
   const { movieId } = req.params;
@@ -51,5 +60,5 @@ const deleteMovie = (req, res, next) => {
 module.exports = {
   getMovies,
   createMovie,
-  deleteMovie
+  deleteMovie,
 };

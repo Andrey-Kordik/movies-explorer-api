@@ -1,7 +1,7 @@
-const User = require('../models/user');
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
@@ -13,7 +13,7 @@ const MONGO_DUPLICATE_ERROR_CODE = 11000;
 
 const getMyData = (req, res, next) => {
   User.findById(req.user._id)
-  .select({ name: 1, email: 1 })
+    .select({ name: 1, email: 1 })
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь по указанному _id не найден');
@@ -39,7 +39,13 @@ const updateUserData = (req, res, next) => {
       }
       return res.send(user);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
+        next(new ConflictError('Пользователь с таким email уже существует.'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 const createUser = (req, res, next) => {
@@ -94,12 +100,10 @@ const logout = (req, res) => {
   }).send({ message: 'Вы вышли из системы' });
 };
 
-
-
 module.exports = {
   getMyData,
   updateUserData,
   createUser,
   login,
-  logout
+  logout,
 };
