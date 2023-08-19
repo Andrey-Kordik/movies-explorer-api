@@ -11,7 +11,7 @@ const limiter = require('./middlewares/rateLimiter');
 
 const app = express();
 
-const { PORT = 3000 } = process.env;
+const { PORT = 4000 } = process.env;
 
 let database;
 
@@ -32,7 +32,7 @@ mongoose.connect(database).then(() => {
 });
 
 app.use(cors({
-  origin: 'http://localhost:3000/',
+  origin: 'http://localhost:3000',
   credentials: true,
 }));
 
