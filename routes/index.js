@@ -9,7 +9,7 @@ const usersRouter = require('./users');
 const moviesRouter = require('./movies');
 
 router.post('/signin', validateUserLogin, login);
-router.post('/signup', createUser);
+router.post('/signup', validateUserCreation, createUser);
 
 router.use(auth);
 router.get('/signout', logout);
