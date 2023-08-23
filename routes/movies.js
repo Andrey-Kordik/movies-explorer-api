@@ -8,7 +8,7 @@ const {
 
 router.get('/', getMovies);
 
-router.delete('/:cardId', validateMovieId, deleteMovie);
+router.delete('/:movieId', validateMovieId, deleteMovie);
 
 router.post('/', validateMovie, createMovie);
 
