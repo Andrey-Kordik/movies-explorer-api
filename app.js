@@ -32,7 +32,7 @@ mongoose.connect(database).then(() => {
 });
 
 app.use(cors({
-  origin: 'http://domain.kordik.diploma.nomoredomains.xyz',
+  origin: 'https://domain.kordik.diploma.nomoredomains.xyz',
   credentials: true,
 }));
 
